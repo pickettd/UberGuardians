@@ -5,7 +5,12 @@ var uberApiUrl = 'https://sandbox-api.uber.com/v1/';
 var uberServerToken = process.env.UBER_SERVER_TOKEN;
 var uberClientID = process.env.UBER_CLIENT_ID;
 var uberClientSecret = process.env.UBER_CLIENT_SECRET;
-var serverUrl = 'http://' + require("os").hostname() + ':' + ( process.env.PORT || 3000 );
+console.log(uberServerToken);
+console.log(uberClientID);
+console.log(uberClientSecret);
+var serverUrl = 'http://localhost:' + ( process.env.PORT || 3000 );
+//var serverUrl = 'http://' + require("os").hostname() + ':' + ( process.env.PORT || 3000 );
+console.log(serverUrl)
 var oauth2 = new OAuth2(
     uberClientID,
     uberClientSecret,
