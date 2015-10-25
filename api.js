@@ -28,7 +28,7 @@ var recursive = function(mailOptions, transporter) {
                  }
                  console.log('Message sent: ' + info.response);
                });
-  setTimeout(function(){recursive(mailOptions, transporter);}, 300000);
+  setTimeout(function(){recursive(mailOptions, transporter);}, 60000);
 };
 
 router.post('/send_mail', function(req, res){
@@ -63,7 +63,7 @@ router.post('/send_mail', function(req, res){
 
   // send mail with defined transport object
   recursive(mailOptions, transporter);
-  
+  res.json({success: true});
 });
 
 var oauth2 = new OAuth2(
