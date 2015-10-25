@@ -24,5 +24,26 @@ angular.module('rideguardians').factory('RideGuardiansUberService', [ '$http', f
     });
   };
 
+  RideGuardiansUberService.getRide = function (product_id, source, destination) {
+    $.post('/api/get_ride', {
+      product_id: product_id,
+      source: source,
+      destination: destination,
+      auth_token: localStorage.auth_token
+    })
+    .done(function(response){
+      if(response.success){
+        console.log('get ride call success');
+      }else{
+        // open popup window to authorize
+        console.log('in get ride but need to get ouath token');
+        window.open(response.popupUrl, "oauth", "scrollbars=1,resizable=1,height=300,width=450");
+      }
+    })
+    .fail(function(err){
+      console.error(err);
+    });
+  };
+
   return RideGuardiansUberService;
 }]);

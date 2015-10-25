@@ -1,9 +1,17 @@
+angular.module('rideguardians').controller('TokenController', ['$routeParams', function($routeParams) {
+  localStorage.auth_token = $routeParams.access_token;
+}]);
+
 angular.module('rideguardians').controller("SimpleMapController", [ '$scope', 'RideGuardiansUberService', function($scope, RideGuardiansUberService) {
   $scope.markers = {};
   $scope.currentProduct = undefined;
 
   $scope.setCurrentProduct = function(product) {
     $scope.currentProduct = product;
+  };
+
+  $scope.getCurrentRide = function() {
+    RideGuardiansUberService.getRide($scope.currentProduct.product_id, $scope.markers.origin, $scope.markers.destination);
   };
 
   $scope.prices = RideGuardiansUberService.currentPrices;
