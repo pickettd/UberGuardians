@@ -19,7 +19,9 @@ angular.module('rideguardians').factory('RideGuardiansUberService', [ '$http', '
       });
     })
     .fail(function(err){
-      RideGuardiansUberService.currentPrices.data = undefined;
+      $timeout(function() {
+        RideGuardiansUberService.currentPrices.data = undefined;
+      });
       if(err.status && err.responseText){
         console.error(err.status, err.responseText);
       }else{
