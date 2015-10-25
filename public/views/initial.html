@@ -1,0 +1,34 @@
+<div class="row">
+  <div class="col-xs-12">
+    <!--<div id="map"></div>-->
+    <leaflet defaults="defaults" lf-center="center" height="400px" markers="markers" event-broadcast="events"></leaflet>
+  </div>
+</div>
+<br>
+<div class="row">
+  <div class="col-xs-6">
+    <div ng-if="!prices.data">
+      <span>Click on the map to get started</span>
+    </div>
+    <div ng-if="prices.data" id="prices">
+      <span ng-if="!currentProduct">Please choose a service:</span>
+      <div ng-repeat="price in prices.data.prices">
+        <button class="btn btn-default btn-lg btn-block"
+                ng-class="{active: (currentProduct && currentProduct.product_id === price.product_id)}"
+                ng-click="setCurrentProduct(price)">
+          <span ng-bind="price.display_name"></span> - <span ng-bind="price.estimate"></span>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="col-xs-6">
+    <div ng-if="currentProduct" id="price-detail">
+      <div>
+        <button type="button" class="btn btn-lg btn-block" id="request" ng-click="getCurrentRide()">
+         Request  <span ng-bind="currentProduct.display_name"></span> Ride
+        </button>
+      </div>
+    </div>
+    <div id="ride-status"></div>
+  </div>
+</div>

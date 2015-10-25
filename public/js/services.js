@@ -4,6 +4,7 @@ angular.module('rideguardians').factory('RideGuardiansUberService', [ '$http', f
   var apiUrl = '/api/';
 
   RideGuardiansUberService.currentPrices = {};
+  RideGuardiansUberService.requestedProduct = {};
   RideGuardiansUberService.currentPrices.data = undefined;
 
   RideGuardiansUberService.getPriceEstimates = function(source, destination) {
@@ -34,6 +35,7 @@ angular.module('rideguardians').factory('RideGuardiansUberService', [ '$http', f
     .done(function(response){
       if(response.success){
         console.log('get ride call success');
+        RideGuardiansUberService.requestedProduct.data = response;
       }else{
         // open popup window to authorize
         console.log('in get ride but need to get ouath token');

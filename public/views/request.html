@@ -1,0 +1,59 @@
+<div class="row">
+  <H1>Request <span ng-bind="currentProduct.display_name"></span> Ride</H1>
+</div>
+<div class="row">
+  <div class="col-xs-6">
+    <ul>
+      <li><p>ETA for driver to arrive: <span ng-bind="currentConfirmation.data.eta"></span></p></li>
+      <li><p>Distance (in miles) of trip: <span ng-bind="currentProduct.distance"></span></p></li>
+      <li><p>Duration (in minutes) of trip: <span ng-bind="currentProduct.duration"></span></p></li>
+    </ul>
+  </div>
+  <div class="col-xs-6">
+  <button type="button" class="btn btn-lg" disabled="disabled"><span ng-bind="currentProduct.estimate"></span></button></div>
+</div>
+<h1>Guardians</h1>
+
+<form class="form-inline">
+  <!-- Hide name field for now -->
+  <!--
+  <div class="form-group">
+    <label for="exampleInputName2">Name</label>
+    <input type="text" class="form-control" id="exampleInputName2" placeholder="Jane Doe">
+  </div>
+  -->
+  <div class="form-group">
+    <label for="exampleInputEmail2">First Email</label>
+    <input type="email" class="form-control" id="exampleInputEmail1" placeholder="jane.doe@example.com">
+  </div>
+  <div class="form-group">
+    <label for="exampleInputEmail2">Second Email</label>
+    <input type="email" class="form-control" id="exampleInputEmail2" placeholder="john.doe@example.com">
+  </div>
+  <!-- Hide invite control now -->
+  <!--
+  <button type="submit" class="btn btn-default">Send invitations</button>
+  -->
+</form>
+
+<!-- Hide emails list for now -->
+<!--
+<table class="table table-striped">
+  <tr>
+    <td>Name</td>
+    <td>Email</td>
+  </tr>
+  <tr>
+    <td>Fill Name</td>
+    <td>Fill Email</td>
+  </tr>
+</table>
+-->
+<div class="row">
+  <div class="col-xs-6">
+    <button type="button" class="btn btn-lg btn-block" ng-click="cancelButtonConfirmPage()">Cancel</button>
+  </div>
+    <div class="row col-xs-6">
+      <button type="button" class="btn btn-lg btn-block">Confirm</button>
+  </div>
+</div>

@@ -5,13 +5,19 @@ angular.module('rideguardians').controller('TokenController', ['$routeParams', f
 angular.module('rideguardians').controller("SimpleMapController", [ '$scope', 'RideGuardiansUberService', function($scope, RideGuardiansUberService) {
   $scope.markers = {};
   $scope.currentProduct = undefined;
+  $scope.currentConfirmation = RideGuardiansUberService.requestedProduct;
 
   $scope.setCurrentProduct = function(product) {
     $scope.currentProduct = product;
   };
 
+  $scope.cancelButtonConfirmPage = function() {
+    $scope.currentConfirmation = {};
+  };
+
   $scope.getCurrentRide = function() {
-    RideGuardiansUberService.getRide($scope.currentProduct.product_id, $scope.markers.origin, $scope.markers.destination);
+    //RideGuardiansUberService.getRide($scope.currentProduct.product_id, $scope.markers.origin, $scope.markers.destination);
+    $scope.currentConfirmation = {data: {eta: 10}};
   };
 
   $scope.prices = RideGuardiansUberService.currentPrices;
