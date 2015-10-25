@@ -4,13 +4,13 @@
 <div class="row">
   <div class="col-xs-6">
     <ul>
-      <li><p>Distance (in miles) of trip: <span ng-bind="currentProduct.distance"></span></p></li>
-      <li><p>Duration (in minutes) of trip: <span ng-bind="currentProduct.duration"></span></p></li>
+      <li><p>Trip distance: <span ng-bind="currentProduct.distance"></span> miles</p></li>
+      <li><p>Trip duration: <span ng-bind="currentProduct.duration"></span> minutes</p></li>
+      <li><p>Cost estimate: <span ng-bind="currentProduct.estimate"></span></p></li>
     </ul>
   </div>
   <div class="col-xs-6">
-  <button type="button" class="btn btn-lg" disabled="disabled"><span ng-bind="currentProduct.estimate"></span></button></div>
-</div>
+  </div>
 <h1>Guardians</h1>
 
 <div class="row">
@@ -56,9 +56,9 @@
 -->
 <div class="row">
   <div class="col-xs-6">
-    <button type="button" class="btn btn-lg btn-block" ng-click="cancelButtonConfirmPage()">Cancel</button>
+    <button type="button" class="btn btn-default btn-lg btn-block" ng-click="cancelButtonConfirmPage()">Cancel</button>
   </div>
     <div class="row col-xs-6">
-      <button type="button" class="btn btn-lg btn-block" ng-click="confirmButtonConfirmPage()">Confirm</button>
+      <button type="button" class="btn btn-default btn-lg btn-block" ng-click="confirmButtonConfirmPage()">Confirm</button>
   </div>
 </div>
