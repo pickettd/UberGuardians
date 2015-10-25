@@ -4,7 +4,6 @@
 <div class="row">
   <div class="col-xs-6">
     <ul>
-      <li><p>ETA for driver to arrive: <span ng-bind="currentConfirmation.data.eta"></span></p></li>
       <li><p>Distance (in miles) of trip: <span ng-bind="currentProduct.distance"></span></p></li>
       <li><p>Duration (in minutes) of trip: <span ng-bind="currentProduct.duration"></span></p></li>
     </ul>
@@ -24,11 +23,13 @@
   -->
   <div class="form-group">
     <label for="exampleInputEmail2">First Email</label>
-    <input type="email" class="form-control" id="exampleInputEmail1" placeholder="jane.doe@example.com">
+    <input type="email" class="form-control" id="exampleInputEmail1" placeholder="jane.doe@example.com"
+           ng-model="currentConfirmation.data.firstEmail">
   </div>
   <div class="form-group">
     <label for="exampleInputEmail2">Second Email</label>
-    <input type="email" class="form-control" id="exampleInputEmail2" placeholder="john.doe@example.com">
+    <input type="email" class="form-control" id="exampleInputEmail2" placeholder="john.doe@example.com"
+           ng-model="currentConfirmation.data.secondEmail">
   </div>
   <!-- Hide invite control now -->
   <!--
@@ -54,6 +55,6 @@
     <button type="button" class="btn btn-lg btn-block" ng-click="cancelButtonConfirmPage()">Cancel</button>
   </div>
     <div class="row col-xs-6">
-      <button type="button" class="btn btn-lg btn-block">Confirm</button>
+      <button type="button" class="btn btn-lg btn-block" ng-click="confirmButtonConfirmPage()">Confirm</button>
   </div>
 </div>

@@ -5,7 +5,8 @@ angular.module('rideguardians').controller('TokenController', ['$routeParams', f
 angular.module('rideguardians').controller("SimpleMapController", [ '$scope', 'RideGuardiansUberService', function($scope, RideGuardiansUberService) {
   $scope.markers = {};
   $scope.currentProduct = undefined;
-  $scope.currentConfirmation = RideGuardiansUberService.requestedProduct;
+  $scope.currentConfirmation = {};
+  $scope.requestedProduct = RideGuardiansUberService.requestedProduct;
 
   $scope.setCurrentProduct = function(product) {
     $scope.currentProduct = product;
@@ -15,9 +16,13 @@ angular.module('rideguardians').controller("SimpleMapController", [ '$scope', 'R
     $scope.currentConfirmation = {};
   };
 
+  $scope.confirmButtonConfirmPage = function() {
+    RideGuardiansUberService.getRide($scope.currentProduct.product_id, $scope.markers.origin, $scope.markers.destination);
+  };
+
   $scope.getCurrentRide = function() {
     //RideGuardiansUberService.getRide($scope.currentProduct.product_id, $scope.markers.origin, $scope.markers.destination);
-    $scope.currentConfirmation = {data: {eta: 10}};
+    $scope.currentConfirmation = {data: {firstEmail: ""}};
   };
 
   $scope.prices = RideGuardiansUberService.currentPrices;

@@ -1,9 +1,20 @@
 <div class="container" ng-controller="SimpleMapController">
 <div ng-view></div>
-  <div ng-show="!currentConfirmation.data">
+  <div ng-show="!currentConfirmation.data || requestedProduct.data">
+    <div class="row">
+      <div class="col-xs-12">
+        <leaflet defaults="defaults" lf-center="center" height="400px" markers="markers" event-broadcast="events"></leaflet>
+      </div>
+    </div>
+    <br>
+  </div>
+  <div ng-show="!currentConfirmation.data && !requestedProduct.data">
     <div ng-include="'views/initial.html'"></div>
   </div>
-  <div ng-show="currentConfirmation.data">
+  <div ng-show="currentConfirmation.data && !requestedProduct.data">
     <div ng-include="'views/request.html'"></div>
+  </div>
+  <div ng-show="currentConfirmation.data && requestedProduct.data">
+    <div ng-include="'views/confirmed.html'"></div>
   </div>
 </div>
