@@ -1,11 +1,12 @@
-angular.module('rideguardians').factory('RideGuardiansUberService', [ '$http', function($http) {
+angular.module('rideguardians').factory('RideGuardiansUberService', [ '$http', '$timeout', function($http, $timeout) {
   var RideGuardiansUberService = {};
 
   var apiUrl = '/api/';
 
   RideGuardiansUberService.currentPrices = {};
-  RideGuardiansUberService.requestedProduct = {};
   RideGuardiansUberService.currentPrices.data = undefined;
+  RideGuardiansUberService.requestedProduct = {};
+  RideGuardiansUberService.requestedProduct.data = undefined;
 
   RideGuardiansUberService.getPriceEstimates = function(source, destination) {
     $.get( apiUrl + 'estimates/price', {
@@ -13,7 +14,9 @@ angular.module('rideguardians').factory('RideGuardiansUberService', [ '$http', f
       destination : JSON.stringify(destination)
     })
     .done(function(data){
-      RideGuardiansUberService.currentPrices.data = JSON.parse(data);
+      $timeout(function() {
+        RideGuardiansUberService.currentPrices.data = JSON.parse(data);
+      });
     })
     .fail(function(err){
       RideGuardiansUberService.currentPrices.data = undefined;
@@ -35,7 +38,9 @@ angular.module('rideguardians').factory('RideGuardiansUberService', [ '$http', f
     .done(function(response){
       if(response.success){
         console.log('get ride call success');
-        RideGuardiansUberService.requestedProduct.data = response;
+        $timeout(function() {
+          RideGuardiansUberService.requestedProduct.data = response;
+        });
       }else{
         // open popup window to authorize
         console.log('in get ride but need to get ouath token');
