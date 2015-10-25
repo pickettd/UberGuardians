@@ -51,7 +51,7 @@ var cancelRequest = function(request_id, auth_token) {
 };
 
 // setting the transporter sendmail to send out mail every 300,000 millisec (5 mins)
-var recursive = function(mailOptions, transporter, request_id, auth_token, panic_mode) {
+var recursive = function(mailOptions, transporter, request_id, auth_token, panic_mode, me) {
   var uberUrl = uberApiUrl + 'requests/'+request_id;
   // create http request to uber api
   request.get({
@@ -70,7 +70,8 @@ var recursive = function(mailOptions, transporter, request_id, auth_token, panic
     if ((panic_mode === 'true') && ((thisStatus === 'in_progress') || (thisStatus === 'arriving'))) {
       cancelRequest(parsedRequestInfo.request_id, auth_token);
       mailOptions.subject = 'RideGuardians PANIC Notification!';
-      mailOptions.text = 'Your friend is using a ridesharing service and is worried about their safety! ';
+      mailOptions.text = 'You are '+me.first_name+' '+me.last_name+'\'s Ride Guardian. ';
+      mailOptions.text += 'Your friend is using a ridesharing service and is worried about their safety! ';
       mailOptions.text += 'Please contact them immediately to help with the emergency.';
       mailOptions.text += ' Latest lat/lng: '+parsedRequestInfo.location.latitude+'/'+parsedRequestInfo.location.longitude;
       mailOptions.html = '<b>'+mailOptions.text+'</b>';
@@ -90,7 +91,8 @@ var recursive = function(mailOptions, transporter, request_id, auth_token, panic
         // Send the SAFE AND SOUND email and stop checking
         if (thisStatus === 'completed') {
           mailOptions.subject = 'RideGuardians SAFE AND SOUND Notification!';
-          mailOptions.text = 'Your friend completed their ridesharing trip and thanks you for being their guardian!';
+          mailOptions.text = 'You are '+me.first_name+' '+me.last_name+'\'s Ride Guardian. ';
+          mailOptions.text += 'Your friend completed their ridesharing trip and thanks you for being their guardian!';
           mailOptions.text += ' Latest lat/lng: '+parsedRequestInfo.location.latitude+'/'+parsedRequestInfo.location.longitude;
           mailOptions.html = '<b>'+mailOptions.text+'</b>';
           transporter.sendMail(mailOptions, function(error, info){
@@ -104,13 +106,14 @@ var recursive = function(mailOptions, transporter, request_id, auth_token, panic
           // Don't send mail but do keep checking
           if ((thisStatus === 'processing') || (thisStatus === 'accepted')) {
             console.log('checked uber request status, not sending mail, status is: '+thisStatus+' request_id is: '+request_id);
-            setTimeout(function(){recursive(mailOptions, transporter, request_id, auth_token, panic_mode);}, timeOutGlobalSetting);
+            setTimeout(function(){recursive(mailOptions, transporter, request_id, auth_token, panic_mode, me);}, timeOutGlobalSetting);
           }
           else {
             // Send mail and keep checking
             if ((thisStatus === 'in_progress') || (thisStatus === 'arriving')) {
               mailOptions.subject += ' - current status - '+thisStatus;
-              var messageBody = messageBodyDefault + 'Latest lat/lng: '+parsedRequestInfo.location.latitude+'/'+parsedRequestInfo.location.longitude;
+              var messageBody = 'You are '+me.first_name+' '+me.last_name+'\'s Ride Guardian. ';
+              messageBody += messageBodyDefault + 'Latest lat/lng: '+parsedRequestInfo.location.latitude+'/'+parsedRequestInfo.location.longitude;
               mailOptions.text = messageBody;
               mailOptions.html = '<b>'+messageBody+'</b>'
               transporter.sendMail(mailOptions, function(error, info){
@@ -120,7 +123,7 @@ var recursive = function(mailOptions, transporter, request_id, auth_token, panic
                console.log('Message sent: ' + info.response);
               });
               mailOptions.subject = 'RideGuardians Notification!';
-              setTimeout(function(){recursive(mailOptions, transporter, request_id, auth_token, panic_mode);}, timeOutGlobalSetting);
+              setTimeout(function(){recursive(mailOptions, transporter, request_id, auth_token, panic_mode, me);}, timeOutGlobalSetting);
             }
             else {
               console.log('checked uber request status, but status doesn\'t match any case: '+thisStatus+' - request_id is: '+request_id);
@@ -165,8 +168,23 @@ router.post('/send_mail', function(req, res){
         text: messageBodyDefault, // plaintext body
         html: '<b>'+messageBodyDefault+'</b>' // html body
     };
-    // send mail with defined transport object
-    recursive(mailOptions, transporter, request_id, auth_token, panic_mode);
+
+    request.get({
+      url : uberApiUrl + 'me',
+      strictSSL: false,
+      auth : {
+        bearer : auth_token
+      }
+    }, function(err, response, body){
+      if(err){
+        console.error(err);
+      }
+      //res.json(body);
+      var me = JSON.parse(body);
+      console.log(me);
+      // send mail with defined transport object
+      recursive(mailOptions, transporter, request_id, auth_token, panic_mode, me);
+    });
 
   res.json({success: true});
 });
@@ -345,7 +363,7 @@ function redirectAccessTokenUrl(access_token) {
 function getAuthorizeUrl(){
   return oauth2.getAuthorizeUrl({
       redirect_uri: serverUrl + '/api/oauth/cb',
-      scope: ['request'],
+      scope: ['request profile'],
       state: 'authorizing',
       response_type: 'code'
     });
