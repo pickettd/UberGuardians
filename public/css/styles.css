@@ -1,17 +1,13 @@
-#map{
-  height : 600px;
+.map{
+  border: 2px solid #000
 }
 body{
-	background-color: #FFEFEF;
 }
 .navbar-default{
-	background-color: #E63056;
-	border-color:  #E63056;
 }
 
 h1{
 	text-align: center;
-	color: #320000;
 }
 #request{height: 50px;
 }
