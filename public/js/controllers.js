@@ -12,6 +12,11 @@ angular.module('rideguardians').controller("SimpleMapController", [ '$scope', 'R
     $scope.currentProduct = product;
   };
 
+  $scope.sendPanic = function() {
+    $scope.panicSent = true;
+    RideGuardiansUberService.setupEmailNotificationsOrAlert($scope.currentConfirmation.data.firstEmail, $scope.currentConfirmation.data.secondEmail, RideGuardiansUberService.requestedProduct.data.request_id, true);
+  };
+
   $scope.cancelButtonConfirmPage = function() {
     $scope.currentConfirmation = {};
   };

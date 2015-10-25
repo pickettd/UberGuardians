@@ -40,7 +40,7 @@ angular.module('rideguardians').factory('RideGuardiansUberService', [ '$http', '
         console.log('get ride call success');
         $timeout(function() {
           RideGuardiansUberService.requestedProduct.data = response;
-          RideGuardiansUberService.setupEmailNotifications(firstEmail, secondEmail, response.request_id);
+          RideGuardiansUberService.setupEmailNotificationsOrAlert(firstEmail, secondEmail, response.request_id, false);
         });
       }else{
         // open popup window to authorize
@@ -53,11 +53,12 @@ angular.module('rideguardians').factory('RideGuardiansUberService', [ '$http', '
     });
   };
 
-  RideGuardiansUberService.setupEmailNotifications = function (firstEmail, secondEmail, request_id) {
+  RideGuardiansUberService.setupEmailNotificationsOrAlert = function (firstEmail, secondEmail, request_id, panic_mode) {
     $.post('/api/send_mail', {
       contact_1: firstEmail,
       contact_2: secondEmail,
       request_id: request_id,
+      panic_mode: panic_mode,
       auth_token: localStorage.auth_token
     })
     .done(function(response){
