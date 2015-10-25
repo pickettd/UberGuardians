@@ -52,5 +52,19 @@ angular.module('rideguardians').factory('RideGuardiansUberService', [ '$http', '
     });
   };
 
+  RideGuardiansUberService.setupEmailNotifications = function (firstEmail, secondEmail) {
+    $.post('/api/send_mail', {
+      contact_1: firstEmail,
+      contact_2: secondEmail,
+      auth_token: localStorage.auth_token
+    })
+    .done(function(response){
+      console.log('setup notification success');
+    })
+    .fail(function(err){
+      console.error(err);
+    });
+  };
+
   return RideGuardiansUberService;
 }]);
