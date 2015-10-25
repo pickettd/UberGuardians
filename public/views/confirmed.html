@@ -1,9 +1,8 @@
-<H1 ng-if="!panicSent">Ride Confirmed</H1>
 <H1 ng-if="panicSent">Ride Canceled - Guardians alerted!</H1>
 <div class="row">
   <div class="col-xs-12">
-    <button ng-if="!panicSent" type="button" class="btn btn-lg btn-default btn-block btn-warning" ng-click="sendPanic()">
-      <h3>Panic!</h3>
+    <button ng-if="!panicSent" type="button" class="btn btn-lg btn-default btn-block btn-danger" ng-click="sendPanic()">
+      <h3 style="color: white;">Panic!</h3>
     </button>
   </div>
 </div>

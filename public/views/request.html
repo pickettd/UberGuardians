@@ -1,64 +1,86 @@
 <div class="row">
-  <H1>Request <span ng-bind="currentProduct.display_name"></span> Ride</H1>
-</div>
-<div class="row">
   <div class="col-xs-6">
-    <ul>
-      <li><p>Trip distance: <span ng-bind="currentProduct.distance"></span> miles</p></li>
-      <li><p>Trip duration: <span ng-bind="currentProduct.duration"></span> minutes</p></li>
-      <li><p>Cost estimate: <span ng-bind="currentProduct.estimate"></span></p></li>
-    </ul>
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <h3 class="panel-title">Trip distance:</h3>
+      </div>
+      <div class="panel-body">
+        <span ng-bind="currentProduct.distance"></span> miles
+      </div>
+    </div>
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <h3 class="panel-title">Trip duration:</h3>
+      </div>
+      <div class="panel-body">
+        <span ng-bind="currentProduct.duration"></span> minutes
+      </div>
+    </div>
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <h3 class="panel-title">Cost estimate:</h3>
+      </div>
+      <div class="panel-body">
+        <span ng-bind="currentProduct.estimate"></span>
+      </div>
+    </div>
   </div>
   <div class="col-xs-6">
-  </div>
-<h1>Guardians</h1>
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <h3 class="panel-title">Guardians:</h3>
+      </div>
+      <div class="panel-body" style="height: 273px;">
+        <div class="row" style="margin: 0px;">
+          <div class="col-xs-12">
 
-<div class="row">
-  <div class="col-xs-12">
-    <form class="form-inline">
-      <!-- Hide name field for now -->
-      <!--
-      <div class="form-group">
-        <label for="exampleInputName2">Name</label>
-        <input type="text" class="form-control" id="exampleInputName2" placeholder="Jane Doe">
+            <form class="form-horizontal">
+              <div class="form-group">
+                <label for="exampleInputEmail2">First Email</label>
+            <input type="email" class="form-control" id="exampleInputEmail1" placeholder="jane.doe@example.com"
+                   ng-model="currentConfirmation.data.firstEmail">
+                </div>
+            </form>
+          </div>
+        </div>
+        <div class="row" style="margin: 0px;">
+          <div class="col-xs-12">
+            <form class="form-horizontal">
+              <div class="form-group">
+                <label for="exampleInputEmail2">Second Email</label>
+            <input type="email" class="form-control" id="exampleInputEmail2" placeholder="jon.doe@example.com"
+                   ng-model="currentConfirmation.data.secondEmail">
+                </div>
+            </form>
+          </div>
+        </div>
+        <div class="row" style="margin: 0px;">
+          <div class="col-xs-12">
+            <form class="form-horizontal">
+              <div class="form-group">
+                <label for="exampleInputEmail2">Third Email</label>
+            <input type="email" class="form-control" id="exampleInputEmail3" placeholder="j.d@example.com"
+                   ng-model="currentConfirmation.data.thirdEmail">
+                </div>
+            </form>
+          </div>
+        </div>
       </div>
-      -->
-      <div class="form-group">
-        <label for="exampleInputEmail2">First Email</label>
-        <input type="email" class="form-control" id="exampleInputEmail1" placeholder="jane.doe@example.com"
-               ng-model="currentConfirmation.data.firstEmail">
-      </div>
-      <div class="form-group">
-        <label for="exampleInputEmail2">Second Email</label>
-        <input type="email" class="form-control" id="exampleInputEmail2" placeholder="john.doe@example.com"
-               ng-model="currentConfirmation.data.secondEmail">
-      </div>
-      <!-- Hide invite control now -->
-      <!--
-      <button type="submit" class="btn btn-default">Send invitations</button>
-      -->
-    </form>
+    </div>
   </div>
 </div>
+
 <br>
-<!-- Hide emails list for now -->
-<!--
-<table class="table table-striped">
-  <tr>
-    <td>Name</td>
-    <td>Email</td>
-  </tr>
-  <tr>
-    <td>Fill Name</td>
-    <td>Fill Email</td>
-  </tr>
-</table>
--->
 <div class="row">
   <div class="col-xs-6">
-    <button type="button" class="btn btn-default btn-lg btn-block" ng-click="cancelButtonConfirmPage()">Cancel</button>
+    <!--<button type="button" class="btn btn-default btn-lg btn-block" ng-click="cancelButtonConfirmPage()">Cancel</button>-->
+    <div>
+        <a href ng-click="cancelButtonConfirmPage()"><span style="font-size: 100px;margin-top: -30px;margin-left: 35%;" class="glyphicon glyphicon-arrow-left"
+              aria-hidden="true"></span>
+        </a>
+    </div>
   </div>
     <div class="row col-xs-6">
-      <button type="button" class="btn btn-default btn-lg btn-block" ng-click="confirmButtonConfirmPage()">Confirm</button>
+      <button type="button" class="btn btn-default btn-lg btn-block" ng-click="confirmButtonConfirmPage()">Book</button>
   </div>
 </div>

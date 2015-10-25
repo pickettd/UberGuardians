@@ -4,6 +4,7 @@ angular.module('rideguardians').controller('TokenController', ['$routeParams', f
 
 angular.module('rideguardians').controller("SimpleMapController", [ '$scope', 'RideGuardiansUberService', function($scope, RideGuardiansUberService) {
   $scope.markers = {};
+  $scope.headerText = "Ride Guardians";
   $scope.currentProduct = undefined;
   $scope.currentConfirmation = {};
   $scope.requestedProduct = RideGuardiansUberService.requestedProduct;
@@ -15,19 +16,23 @@ angular.module('rideguardians').controller("SimpleMapController", [ '$scope', 'R
   $scope.sendPanic = function() {
     $scope.panicSent = true;
     RideGuardiansUberService.setupEmailNotificationsOrAlert($scope.currentConfirmation.data.firstEmail, $scope.currentConfirmation.data.secondEmail, RideGuardiansUberService.requestedProduct.data.request_id, true);
+    $scope.headerText = 'Ride Canceled - Guardians alerted!';
   };
 
   $scope.cancelButtonConfirmPage = function() {
     $scope.currentConfirmation = {};
+    $scope.headerText = "Ride Guardians";
   };
 
   $scope.confirmButtonConfirmPage = function() {
     RideGuardiansUberService.getRideAndSetupEmails($scope.currentProduct.product_id, $scope.markers.origin, $scope.markers.destination, $scope.currentConfirmation.data.firstEmail, $scope.currentConfirmation.data.secondEmail);
+    $scope.headerText = $scope.currentProduct.display_name+' ride booked';
   };
 
   $scope.getCurrentRide = function() {
     //RideGuardiansUberService.getRide($scope.currentProduct.product_id, $scope.markers.origin, $scope.markers.destination);
     $scope.currentConfirmation = {data: {firstEmail: ""}};
+    $scope.headerText = 'Request '+$scope.currentProduct.display_name+' ride';
   };
 
   $scope.prices = RideGuardiansUberService.currentPrices;
@@ -40,7 +45,12 @@ angular.module('rideguardians').controller("SimpleMapController", [ '$scope', 'R
     $scope.markers.destination = {
       lat: leafEvent.latlng.lat,
       lng: leafEvent.latlng.lng,
-      message: "My Added Marker"
+      message: "My Destination",
+      icon: {
+        type: 'awesomeMarker',
+        icon: 'screenshot',
+        markerColor: 'blue'
+      }
     };
   });
 
@@ -49,7 +59,12 @@ angular.module('rideguardians').controller("SimpleMapController", [ '$scope', 'R
     $scope.markers.origin = {
       lat: leafEvent.latlng.lat,
       lng: leafEvent.latlng.lng,
-      message: "My location"
+      message: "My location",
+      icon: {
+        type: 'awesomeMarker',
+        icon: 'user',
+        markerColor: 'red'
+      }
     };
   });
 
