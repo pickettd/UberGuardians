@@ -9,7 +9,14 @@ var uberApiUrl = 'https://sandbox-api.uber.com/v1/';
 var uberServerToken = process.env.UBER_SERVER_TOKEN;
 var uberClientID = process.env.UBER_CLIENT_ID;
 var uberClientSecret = process.env.UBER_CLIENT_SECRET;
-var serverUrl = ( process.env.HEROKU_URL || 'http://localhost:' ) + ( process.env.PORT || 3000 );
+var heroku_url = process.env.HEROKU_URL
+var serverUrl = null;
+if( heroku_url ) { 
+  serverUrl = heroku_url;
+} else {
+  serverUrl = ( 'http://localhost:' ) + ( process.env.PORT || 3000 );
+
+}
 
 console.log(serverUrl);
 
