@@ -4,3 +4,20 @@
 body{
 	background-color: red;
 }
+.navbar-default{
+	background-color: #E63056;
+	border-color:  #E63056;
+}
+
+h1{
+	text-align: center;
+	color: white;
+}
+#request{height: 50px;
+}
+
+table{
+	border-color: black;
+	border-style: solid;
+
+}
