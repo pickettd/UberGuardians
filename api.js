@@ -11,6 +11,8 @@ var uberClientID = process.env.UBER_CLIENT_ID;
 var uberClientSecret = process.env.UBER_CLIENT_SECRET;
 var serverUrl = ( process.env.HEROKU_URL || 'http://localhost:' ) + ( process.env.PORT || 3000 );
 
+console.log(serverUrl);
+
 router.post('/send_mail', function(req, res){
   var contactList = [
     req.body.contact_1,
