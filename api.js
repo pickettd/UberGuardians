@@ -9,7 +9,7 @@ var uberApiUrl = 'https://sandbox-api.uber.com/v1/';
 var uberServerToken = process.env.UBER_SERVER_TOKEN;
 var uberClientID = process.env.UBER_CLIENT_ID;
 var uberClientSecret = process.env.UBER_CLIENT_SECRET;
-var serverUrl = 'http://localhost:' + ( process.env.PORT || 3000 );
+var serverUrl = ( process.env.HEROKU_URL || 'http://localhost:' ) + ( process.env.PORT || 3000 );
 
 router.post('/send_mail', function(req, res){
   var contactList = [
