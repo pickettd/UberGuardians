@@ -1,16 +1,55 @@
 var router = require('express').Router();
 var request = require('request');
 var OAuth2 = require('oauth').OAuth2;
+var nodemailer = require('nodemailer');
+var mailUserName = process.env.MAIL_USER_NAME;
+var mailPassword = process.env.MAIL_PASSWORD;
+
 var uberApiUrl = 'https://sandbox-api.uber.com/v1/';
 var uberServerToken = process.env.UBER_SERVER_TOKEN;
 var uberClientID = process.env.UBER_CLIENT_ID;
 var uberClientSecret = process.env.UBER_CLIENT_SECRET;
-console.log(uberServerToken);
-console.log(uberClientID);
-console.log(uberClientSecret);
 var serverUrl = 'http://localhost:' + ( process.env.PORT || 3000 );
-//var serverUrl = 'http://' + require("os").hostname() + ':' + ( process.env.PORT || 3000 );
-console.log(serverUrl)
+
+router.post('/send_mail', function(req, res){
+  var contactList = [
+    req.body.contact_1,
+    req.body.contact_2,
+    req.body.contact_3,
+    req.body.contact_4,
+    req.body.contact_5
+  ];
+
+  console.log(contactList);
+
+  // create reusable transporter object using SMTP transport
+  var transporter = nodemailer.createTransport({
+      service: 'Gmail',
+      auth: {
+          user: mailUserName, 
+          pass: mailPassword
+      }
+  });
+
+  // setup e-mail data (unicode symbols)
+  var mailOptions = {
+      from: 'UberGuardians <' + mailUserName + '>', // sender address
+      to: contactList, // list of receivers
+      //'siyuanpfx@gmail.com, pickettd@gmail.com, zac.mroz@gmail.com, hawaiianredz.anzai@gmail.com', // list of receivers
+      subject: 'Testing UberGuardians Mailing!', // Subject line
+      text: 'Hello world ✔', // plaintext body
+      html: '<b>Hello world ✔</b>' // html body
+  };
+
+  // send mail with defined transport object
+  transporter.sendMail(mailOptions, function(error, info){
+      if(error){
+          return console.log(error);
+      }
+      console.log('Message sent: ' + info.response);
+  });
+});
+
 var oauth2 = new OAuth2(
     uberClientID,
     uberClientSecret,

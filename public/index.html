@@ -3,81 +3,69 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width">
-    <title>Uber Price Estimates</title>
+    <title>Ride Guardians</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.5/leaflet.css" />
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" type="text/css" media="all" />
+    <!-- Latest compiled and minified Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
+
+    <!-- Optional Bootstrap theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css" integrity="sha384-aUGj/X2zp5rLCbBxumKTCw2Z50WgIr1vs/PFN4praOTvYXWlVyh2UtNUU0KAUhAX" crossorigin="anonymous">
     <link rel="stylesheet" href="css/styles.css" />
   </head>
-  <body>
+  <body ng-app="rideguardians">
     <nav class="navbar navbar-default"><h1>RideGaurdians</h1>
-  <div class="container-fluid">
-<!--    <div class="navbar-header">
-    </div> -->
-  </div>
-
-
-
-</nav>
-    <div class="container">
-      <div class="row">
-        <h1>Hello Uber</h1>
+      <div class="container-fluid">
+      <!--    <div class="navbar-header">
+      </div> -->
       </div>
 
-      <div class="row">
-        <div id="map"></div>
-      </div>
-<br>
-<div class=" col-sm-6 col-md-6 col-xl-6 col-lg-6">
-    <table class="table table-striped">
-      <tr>
-        <td>Hello</td>
-        <td>hi</td>
-      </tr>
-      <tr>
-        <td>Hello</td>
-        <td>hi</td>
-      </tr>
-      <tr>
-        <td>Hello</td>
-        <td>hig</td>
-      </tr>
-       <tr>
-        <td>Hello</td>
-        <td>hi</td>
-      </tr>
-       <tr>
-        <td>Hello</td>
-        <td>hi</td>
-      </tr>
-      
-    </table>
-  </div>
-      <div class="row">
-        <div class="col-sm-6 col-md-6 col-xl-6 col-lg-6" style="float: right"><button type="button" class="btn btn-lg btn-block" id="request">Request Ride</button></div>
-        <div class="one-half column">
-          <div id="prices"></div>
-        </div>
-        <div class="one-half column">
-          <div id="price-detail"></div>
-          <div id="ride-status"></div>
-        </div>
-      </div>
-    
+    </nav>
+    <div ng-include="'views/main.html'">
     </div>
 
-</div>
+    <br>
+    <div class="row">
+      <div class=" col-xs-6">
+        <table class="table table-striped">
+          <tr>
+            <td>Hello</td>
+            <td>hi</td>
+          </tr>
+          <tr>
+            <td>Hello</td>
+            <td>hi</td>
+          </tr>
+          <tr>
+            <td>Hello</td>
+            <td>hig</td>
+          </tr>
+           <tr>
+            <td>Hello</td>
+            <td>hi</td>
+          </tr>
+           <tr>
+            <td>Hello</td>
+            <td>hi</td>
+          </tr>
+          
+        </table>
+      </div>
+      <div class="col-xs-6">
+        <div>
+          <button type="button" class="btn btn-lg btn-block" id="request">Request Ride</button>
+        </div>
+      </div>
+
+    </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-alpha1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.5/leaflet.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.3/handlebars.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.2.3/backbone-min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-    <script src="js/routes.js"></script>
-    <script src="js/template_manager.js"></script>
-    <script src="js/models/price.js"></script>
-    <script src="js/models/status.js"></script>
-    <script src="js/views/price.js"></script>
-    <script src="js/views/status.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.7/angular.min.js"></script>
+    <script src="lib/angular-simple-logger/dist/angular-simple-logger.min.js"></script>
+    <script src="lib/angular-leaflet-directive/dist/angular-leaflet-directive.min.js"></script>
     <script src="js/app.js"></script>
+    <script src="js/services.js"></script>
+    <script src="js/controllers.js"></script>
   </body>
 </html>
