@@ -5,13 +5,25 @@
 
   var origin = { lat : 21.3088619, lng : -157.8086674}; // mic
 
-  var map = L.map('map').setView(origin, 17);
+ // var map = L.map('map').setView(origin, 17);
+  var map = L.map('map', {doubleClickZoom: false}).locate({setView: true, maxZoom: 17});
 
   L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
 }).addTo(map);
 
-  var originMarker = L.marker(origin).addTo(map);
+  // function to locate current location
+  function onLocationFound(e) {
+    var radius = e.accuracy / 2;
+
+    L.marker(e.latlng).addTo(map)
+        .bindPopup("You are within " + radius + " meters from this point").openPopup();
+
+    L.circle(e.latlng, radius).addTo(map);
+  }
+  map.on('locationfound', onLocationFound);
+
+//  var originMarker = L.marker(origin).addTo(map);
   var destinationMarker = null;
   var prices = new Prices();
   var pricesView = new PricesView({
