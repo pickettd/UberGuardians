@@ -2,7 +2,7 @@
   height : 600px;
 }
 body{
-	background-color: red;
+	background-color: #FFEFEF;
 }
 .navbar-default{
 	background-color: #E63056;
@@ -11,13 +11,16 @@ body{
 
 h1{
 	text-align: center;
-	color: white;
+	color: #320000;
 }
 #request{height: 50px;
 }
 
 table{
-	border-color: black;
+	border-color: #320000;
 	border-style: solid;
 
+}
+li{
+	color: #320000;
 }
