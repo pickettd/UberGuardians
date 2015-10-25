@@ -96,6 +96,68 @@ router.get('/estimates/price', function(req, res){
   });
 });
 
+router.post('/request_info', function(req, res){
+
+  if( !req.body.hasOwnProperty('auth_token') ){
+    return res.json({
+      success : false,
+      code : 401,
+      popupUrl : getAuthorizeUrl()
+    });
+  }
+  var request_id = req.body.request_id;
+  var uberUrl = uberApiUrl + 'requests/'+request_id;
+
+// create http request to uber api
+  request.get({
+    url : uberUrl,
+    strictSSL: false,
+    auth : {
+      bearer : req.body.auth_token
+    }
+  }, function(err, response, body){
+    if(err){
+      console.log(err);
+      return res.json(err);
+    }
+    var newBody = JSON.parse(body);
+    newBody.success = true;
+    res.json(newBody);
+  });
+});
+
+router.post('/change_request_status', function(req, res){
+  if( !req.body.hasOwnProperty('auth_token') ){
+    return res.json({
+      success : false,
+      code : 401,
+      popupUrl : getAuthorizeUrl()
+    });
+  }
+
+  var uberRequest = {
+    status : req.body.status
+  };
+
+  // create http request to uber api
+  request({
+    method: 'PUT',
+    url: uberApiUrl + 'sandbox/requests/'+req.body.request_id,
+    json: uberRequest,
+    strictSSL: false,
+    auth : {
+      bearer : req.body.auth_token
+    }
+  }, function(err, response, body){
+    if(err){
+      console.error(err);
+      return res.json(err);
+    }
+    res.json({success: true});
+  });
+
+});
+
 router.post('/get_ride', function(req, res){
   if( !req.body.hasOwnProperty('auth_token') ){
     return res.json({
