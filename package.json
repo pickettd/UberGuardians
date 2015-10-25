@@ -1,21 +1,21 @@
 {
-  "name": "uber-price-estimate",
+  "name": "ride-guardians",
   "version": "1.0.0",
-  "description": "Front End Price Estimate example",
+  "description": "",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/devleague/Uber-Price-Estimate.git"
+    "url": "git+https://github.com/pickettd/UberGuardians.git"
   },
   "author": "Jon Borgonia <jon@devleague.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/devleague/Uber-Price-Estimate/issues"
+    "url": "https://github.com/pickettd/UberGuardians/issues"
   },
-  "homepage": "https://github.com/devleague/Uber-Price-Estimate#readme",
+  "homepage": "https://github.com/pickettd/UberGuardians#readme",
   "dependencies": {
     "body-parser": "^1.14.1",
     "express": "^4.13.3",
