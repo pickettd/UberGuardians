@@ -11,7 +11,19 @@ var uberClientID = process.env.UBER_CLIENT_ID;
 var uberClientSecret = process.env.UBER_CLIENT_SECRET;
 var heroku_url = process.env.HEROKU_URL
 var serverUrl = null;
-if( heroku_url ) { 
+
+var timeOutGlobalSetting = 60000;
+
+var messageBodyDefault = [
+  'You\'re being notified that your friend is using a ridesharing service ',
+  'right now and asked you to be their Ride Guardian. ',
+  'These messages will continue until your friend safely completes their trip. ',
+  'And you will receive a final, safe and sound notification when the trip is successfully completed.'
+  ].join('');
+
+
+
+if( heroku_url ) {
   serverUrl = heroku_url;
 } else {
   serverUrl = ( 'http://localhost:' ) + ( process.env.PORT || 3000 );
@@ -21,17 +33,74 @@ if( heroku_url ) {
 console.log(serverUrl);
 
 // setting the transporter sendmail to send out mail every 300,000 millisec (5 mins)
-var recursive = function(mailOptions, transporter) {
-  transporter.sendMail(mailOptions, function(error, info){
-                 if(error){
-                   return console.log(error);
-                 }
-                 console.log('Message sent: ' + info.response);
-               });
-  setTimeout(function(){recursive(mailOptions, transporter);}, 60000);
+var recursive = function(mailOptions, transporter, request_id, auth_token) {
+  var uberUrl = uberApiUrl + 'requests/'+request_id;
+  // create http request to uber api
+  request.get({
+    url : uberUrl,
+    strictSSL: false,
+    auth : {
+      bearer : auth_token
+    }
+  }, function(err, response, body){
+    if(err){
+      console.log(err);
+      return;
+    }
+    var parsedRequestInfo = JSON.parse(body);
+    var thisStatus = parsedRequestInfo.status;
+    // No email and no checking
+    if ((thisStatus === 'no_drivers_available') || (thisStatus === 'driver_canceled') || (thisStatus === 'rider_canceled')) {
+      console.log('checked uber request status, not sending mail and not checking again, status is: '+thisStatus+' - request_id is: '+request_id);
+    }
+    else {
+      // Send the SAFE AND SOUND email and stop checking
+      if (thisStatus === 'completed') {
+        mailOptions.subject = 'RideGuardians SAFE AND SOUND Notification!';
+        mailOptions.text = 'Your friend completed their ridesharing trip and thanks you for being their guardian!';
+        mailOptions.text += ' Latest lat/lng: '+parsedRequestInfo.location.latitude+'/'+parsedRequestInfo.location.longitude;
+        mailOptions.html = '<b>'+mailOptions.text+'</b>';
+        transporter.sendMail(mailOptions, function(error, info){
+          if(error){
+            return console.log(error);
+          }
+            console.log('Message sent: ' + info.response);
+          });
+      }
+      else {
+        // Don't send mail but do keep checking
+        if ((thisStatus === 'processing') || (thisStatus === 'accepted')) {
+          console.log('checked uber request status, not sending mail, status is: '+thisStatus+' request_id is: '+request_id);
+          setTimeout(function(){recursive(mailOptions, transporter, request_id, auth_token);}, timeOutGlobalSetting);
+        }
+        else {
+          // Send mail and keep checking
+          if ((thisStatus === 'in_progress') || (thisStatus === 'arriving')) {
+            mailOptions.subject += ' - current status - '+thisStatus;
+            var messageBody = messageBodyDefault + 'Latest lat/lng: '+parsedRequestInfo.location.latitude+'/'+parsedRequestInfo.location.longitude;
+            mailOptions.text = messageBody;
+            mailOptions.html = '<b>'+messageBody+'</b>'
+            transporter.sendMail(mailOptions, function(error, info){
+             if(error){
+               return console.log(error);
+             }
+             console.log('Message sent: ' + info.response);
+            });
+            mailOptions.subject = 'RideGuardians Notification!';
+            setTimeout(function(){recursive(mailOptions, transporter, request_id, auth_token);}, timeOutGlobalSetting);
+          }
+          else {
+            console.log('checked uber request status, but status doesn\'t match any case: '+thisStatus+' - request_id is: '+request_id);
+          }
+        }
+      }
+    }
+  });
 };
 
 router.post('/send_mail', function(req, res){
+  var request_id = req.body.request_id;
+  var auth_token = req.body.auth_token;
   var contactList = [
     req.body.contact_1,
     req.body.contact_2,
@@ -50,19 +119,20 @@ router.post('/send_mail', function(req, res){
           pass: mailPassword
       }
   });
+  
 
   // setup e-mail data (unicode symbols)
   var mailOptions = {
-      from: 'UberGuardians <' + mailUserName + '>', // sender address
+      from: 'RideGuardians <' + mailUserName + '>', // sender address
       to: contactList, // list of receivers
       //'siyuanpfx@gmail.com, pickettd@gmail.com, zac.mroz@gmail.com, hawaiianredz.anzai@gmail.com', // list of receivers
-      subject: 'Testing UberGuardians Mailing!', // Subject line
-      text: 'Hello world ✔', // plaintext body
-      html: '<b>Hello world ✔</b>' // html body
+      subject: 'RideGuardians Notification!', // Subject line
+      text: messageBodyDefault, // plaintext body
+      html: '<b>'+messageBodyDefault+'</b>' // html body
   };
 
   // send mail with defined transport object
-  recursive(mailOptions, transporter);
+  recursive(mailOptions, transporter, request_id, auth_token);
   res.json({success: true});
 });
 

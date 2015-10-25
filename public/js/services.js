@@ -28,7 +28,7 @@ angular.module('rideguardians').factory('RideGuardiansUberService', [ '$http', '
     });
   };
 
-  RideGuardiansUberService.getRide = function (product_id, source, destination) {
+  RideGuardiansUberService.getRideAndSetupEmails = function (product_id, source, destination, firstEmail, secondEmail) {
     $.post('/api/get_ride', {
       product_id: product_id,
       source: source,
@@ -40,6 +40,7 @@ angular.module('rideguardians').factory('RideGuardiansUberService', [ '$http', '
         console.log('get ride call success');
         $timeout(function() {
           RideGuardiansUberService.requestedProduct.data = response;
+          RideGuardiansUberService.setupEmailNotifications(firstEmail, secondEmail, response.request_id);
         });
       }else{
         // open popup window to authorize
@@ -52,10 +53,11 @@ angular.module('rideguardians').factory('RideGuardiansUberService', [ '$http', '
     });
   };
 
-  RideGuardiansUberService.setupEmailNotifications = function (firstEmail, secondEmail) {
+  RideGuardiansUberService.setupEmailNotifications = function (firstEmail, secondEmail, request_id) {
     $.post('/api/send_mail', {
       contact_1: firstEmail,
       contact_2: secondEmail,
+      request_id: request_id,
       auth_token: localStorage.auth_token
     })
     .done(function(response){

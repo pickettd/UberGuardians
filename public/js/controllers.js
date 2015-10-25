@@ -17,8 +17,7 @@ angular.module('rideguardians').controller("SimpleMapController", [ '$scope', 'R
   };
 
   $scope.confirmButtonConfirmPage = function() {
-    RideGuardiansUberService.getRide($scope.currentProduct.product_id, $scope.markers.origin, $scope.markers.destination);
-    RideGuardiansUberService.setupEmailNotifications($scope.currentConfirmation.data.firstEmail, $scope.currentConfirmation.data.secondEmail);
+    RideGuardiansUberService.getRideAndSetupEmails($scope.currentProduct.product_id, $scope.markers.origin, $scope.markers.destination, $scope.currentConfirmation.data.firstEmail, $scope.currentConfirmation.data.secondEmail);
   };
 
   $scope.getCurrentRide = function() {
