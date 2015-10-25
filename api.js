@@ -20,6 +20,17 @@ if( heroku_url ) {
 
 console.log(serverUrl);
 
+// setting the transporter sendmail to send out mail every 300,000 millisec (5 mins)
+var recursive = function(mailOptions, transporter) {
+  transporter.sendMail(mailOptions, function(error, info){
+                 if(error){
+                   return console.log(error);
+                 }
+                 console.log('Message sent: ' + info.response);
+               });
+  setTimeout(function(){recursive(mailOptions, transporter);}, 300000);
+};
+
 router.post('/send_mail', function(req, res){
   var contactList = [
     req.body.contact_1,
@@ -51,12 +62,8 @@ router.post('/send_mail', function(req, res){
   };
 
   // send mail with defined transport object
-  transporter.sendMail(mailOptions, function(error, info){
-      if(error){
-          return console.log(error);
-      }
-      console.log('Message sent: ' + info.response);
-  });
+  recursive(mailOptions, transporter);
+  
 });
 
 var oauth2 = new OAuth2(
