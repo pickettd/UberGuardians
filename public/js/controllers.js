@@ -1,5 +1,6 @@
-angular.module('rideguardians').controller('TokenController', ['$routeParams', function($routeParams) {
+angular.module('rideguardians').controller('TokenController', ['$routeParams', 'RideGuardiansUberService', function($routeParams, RideGuardiansUberService) {
   localStorage.auth_token = $routeParams.access_token;
+  RideGuardiansUberService.loginData.hasAuthToken = true;
 }]);
 
 angular.module('rideguardians').controller("SimpleMapController", [ '$scope', 'RideGuardiansUberService', function($scope, RideGuardiansUberService) {
@@ -10,6 +11,7 @@ angular.module('rideguardians').controller("SimpleMapController", [ '$scope', 'R
   $scope.requestedProduct = RideGuardiansUberService.requestedProduct;
   $scope.pricesLoadingText = undefined;
   $scope.nextSandboxRideStatus = undefined;
+  $scope.uberLoginData = RideGuardiansUberService.loginData;
 
   var updateCarMarker = function(hasData) {
     if (!RideGuardiansUberService.requestedProduct.data || !RideGuardiansUberService.requestedProduct.data.location || !RideGuardiansUberService.requestedProduct.data.location.latitude) {
@@ -51,6 +53,7 @@ angular.module('rideguardians').controller("SimpleMapController", [ '$scope', 'R
     }
     else {
       $scope.headerText = 'Request '+$scope.currentProduct.display_name+' ride';
+      alert('You need to sign into Uber first. Please click ok, make sure popups are allowed and showing, use the next popup window to authenticate with Uber, and then click book again.');
     }
   };
 

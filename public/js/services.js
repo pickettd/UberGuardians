@@ -7,6 +7,10 @@ angular.module('rideguardians').factory('RideGuardiansUberService', [ '$http', '
   RideGuardiansUberService.currentPrices.data = undefined;
   RideGuardiansUberService.requestedProduct = {};
   RideGuardiansUberService.requestedProduct.data = undefined;
+  RideGuardiansUberService.loginData = {};
+  if (localStorage.auth_token) {
+    RideGuardiansUberService.loginData.hasAuthToken = true;
+  }
 
   RideGuardiansUberService.updateRideStatus = function(updateCarLocationCallback) {
     $.post('/api/request_info', {
@@ -113,8 +117,8 @@ angular.module('rideguardians').factory('RideGuardiansUberService', [ '$http', '
       }else{
         // open popup window to authorize
         console.log('in get ride but need to get ouath token');
+        RideGuardiansUberService.loginData.hasAuthToken = false;
         doneCallback(false);
-        alert('You need to sign into Uber first. Please click ok, use the next popup window to authenticate with Uber, and then click book again.');
         window.open(response.popupUrl, "oauth", "scrollbars=1,resizable=1,height=300,width=450");
       }
     })

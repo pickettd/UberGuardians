@@ -81,7 +81,10 @@
     </div>
   </div>
     <div class="row col-xs-6">
-      <button type="button" class="btn btn-default btn-lg btn-block" ng-click="confirmButtonConfirmPage()" ng-disabled="headerText.indexOf('Booking') !== -1">Book</button>
-      <span ng-if="headerText.indexOf('Booking') !== -1">...Loading...</span>
+      <button type="button" class="btn btn-default btn-lg btn-block" ng-click="confirmButtonConfirmPage()">
+        <span ng-if="uberLoginData.hasAuthToken">Book</span>
+        <span ng-if="!uberLoginData.hasAuthToken">Login</span>
+      </button>
+      <span ng-if="headerText.indexOf('Booking') !== -1">...Waiting...</span>
   </div>
 </div>
