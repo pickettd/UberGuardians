@@ -1,8 +1,27 @@
 <H1 ng-if="panicSent">Ride Canceled - Guardians alerted!</H1>
 <div class="row">
   <div class="col-xs-12">
-    <button ng-if="!panicSent" type="button" class="btn btn-lg btn-default btn-block btn-danger" ng-click="sendPanic()">
-      <h3 style="color: white;">Panic!</h3>
-    </button>
+    <span ng-if="!requestedProduct.data.driver">
+      <span>...Waiting for a driver to accept your booking...</span><br>
+      <span>Once your driver has accepted your request, a panic button will appear here in case of emergency</span>
+    </span>
+    <span ng-if="requestedProduct.data.status === 'completed'">Your ride is completed and your Guardians are being notified of your safe arrival</span>
+    <div ng-if="requestedProduct.data.driver && !panicSent && requestedProduct.data.status !== 'completed'">
+      <span>Just in case of emergency:</span>
+      <button type="button" class="btn btn-lg btn-default btn-block btn-danger" ng-click="sendPanic()">
+        <h3 style="color: white;">Panic!</h3>
+      </button>
+    </div>
   </div>
+</div>
+<hr>
+<div>
+  <h4>Demo mode ride control (Uber API Sandbox):</h4>
+  <span>Ride status: <span ng-bind="requestedProduct.data.status"></span></span><br>
+  <span ng-if="!requestedProduct.data.driver">Driver: None<br></span>
+  <span ng-if="requestedProduct.data.driver">Driver Name: <span ng-bind="requestedProduct.data.driver.name"></span><br></span>
+  <span ng-if="requestedProduct.data.driver">Driver Phone: <span ng-bind="requestedProduct.data.driver.phone_number"></span><br></span>
+  <span ng-if="!requestedProduct.data.location">Location: None<br></span>
+  <span ng-if="requestedProduct.data.location">Location: <span ng-bind="requestedProduct.data.location.latitude"></span>, <span ng-bind="requestedProduct.data.location.longitude"></span><br></span>
+  <button ng-if="requestedProduct.data.nextRideStatus !== 'none'" type="button" class="btn btn-default" ng-click="progressSandboxRideStatus()">Move to <span ng-bind="requestedProduct.data.nextRideStatus"></span> status</button>
 </div>

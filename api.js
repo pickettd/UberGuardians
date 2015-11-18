@@ -9,7 +9,7 @@ var uberApiUrl = 'https://sandbox-api.uber.com/v1/';
 var uberServerToken = process.env.UBER_SERVER_TOKEN;
 var uberClientID = process.env.UBER_CLIENT_ID;
 var uberClientSecret = process.env.UBER_CLIENT_SECRET;
-var heroku_url = process.env.HEROKU_URL
+var heroku_url = process.env.HEROKU_URL;
 var serverUrl = null;
 
 var timeOutGlobalSetting = 40000;
@@ -44,9 +44,12 @@ var cancelRequest = function(request_id, auth_token) {
     }
   }, function(err, response, body){
     if(err){
+      console.log('in cancelreq function, got error, err is: ');
       console.log(err);
       return;
     }
+    console.log('in cancelreq function, no error, body is: ');
+      console.log(body);
   });
 };
 
@@ -62,12 +65,13 @@ var recursive = function(mailOptions, transporter, request_id, auth_token, panic
     }
   }, function(err, response, body){
     if(err){
+      console.log('Error in recursive call getting request info: ');
       console.log(err);
       return;
     }
     var parsedRequestInfo = JSON.parse(body);
     var thisStatus = parsedRequestInfo.status;
-    if ((panic_mode === 'true') && ((thisStatus === 'in_progress') || (thisStatus === 'arriving'))) {
+    if ((panic_mode === 'true') && ((thisStatus === 'in_progress') || (thisStatus === 'accepted') || (thisStatus === 'arriving'))) {
       cancelRequest(parsedRequestInfo.request_id, auth_token);
       mailOptions.subject = 'RideGuardians PANIC Notification!';
       mailOptions.text = 'You are '+me.first_name+' '+me.last_name+'\'s Ride Guardian. ';
@@ -75,12 +79,15 @@ var recursive = function(mailOptions, transporter, request_id, auth_token, panic
       mailOptions.text += 'Please contact them immediately to help with the emergency.';
       mailOptions.text += ' Latest lat/lng: '+parsedRequestInfo.location.latitude+'/'+parsedRequestInfo.location.longitude;
       mailOptions.html = '<b>'+mailOptions.text+'</b>';
-      transporter.sendMail(mailOptions, function(error, info){
-        if(error){
-          return console.log(error);
-        }
-          console.log('Message sent: ' + info.response);
-        });
+      if (mailOptions.to && mailOptions.to.length && mailOptions.to[0] !== '') {
+        transporter.sendMail(mailOptions, function(error, info){
+          if(error){
+            console.log('Error in recursive call sending panic mail: ');
+            return console.log(error);
+          }
+            console.log('Panic message sent: ' + info.response);
+          });
+      }
     }
     else {
       // No email and no checking
@@ -95,12 +102,15 @@ var recursive = function(mailOptions, transporter, request_id, auth_token, panic
           mailOptions.text += 'Your friend completed their ridesharing trip and thanks you for being their guardian!';
           mailOptions.text += ' Latest lat/lng: '+parsedRequestInfo.location.latitude+'/'+parsedRequestInfo.location.longitude;
           mailOptions.html = '<b>'+mailOptions.text+'</b>';
-          transporter.sendMail(mailOptions, function(error, info){
-            if(error){
-              return console.log(error);
-            }
-              console.log('Message sent: ' + info.response);
-            });
+          if (mailOptions.to && mailOptions.to.length && mailOptions.to[0] !== '') {
+            transporter.sendMail(mailOptions, function(error, info){
+              if(error){
+                console.log('Error in recursive call sending safe mail: ');
+                return console.log(error);
+              }
+                console.log('Safe and sound message sent: ' + info.response);
+              });
+          }
         }
         else {
           // Don't send mail but do keep checking
@@ -115,13 +125,16 @@ var recursive = function(mailOptions, transporter, request_id, auth_token, panic
               var messageBody = 'You are '+me.first_name+' '+me.last_name+'\'s Ride Guardian. ';
               messageBody += messageBodyDefault + 'Latest lat/lng: '+parsedRequestInfo.location.latitude+'/'+parsedRequestInfo.location.longitude;
               mailOptions.text = messageBody;
-              mailOptions.html = '<b>'+messageBody+'</b>'
-              transporter.sendMail(mailOptions, function(error, info){
-               if(error){
-                 return console.log(error);
-               }
-               console.log('Message sent: ' + info.response);
-              });
+              mailOptions.html = '<b>'+messageBody+'</b>';
+              if (mailOptions.to && mailOptions.to.length && mailOptions.to[0] !== '') {
+                transporter.sendMail(mailOptions, function(error, info){
+                 if(error){
+                   console.log('Error in recursive call sending ongoing mail: ');
+                   return console.log(error);
+                 }
+                 console.log('Message sent: ' + info.response);
+                });
+              }
               mailOptions.subject = 'RideGuardians Notification!';
               setTimeout(function(){recursive(mailOptions, transporter, request_id, auth_token, panic_mode, me);}, timeOutGlobalSetting);
             }
@@ -148,6 +161,7 @@ router.post('/send_mail', function(req, res){
     req.body.contact_5
   ];
 
+  console.log('In send mail, contact list is: ');
   console.log(contactList);
 
   // create reusable transporter object using SMTP transport
@@ -181,6 +195,7 @@ router.post('/send_mail', function(req, res){
       }
       //res.json(body);
       var me = JSON.parse(body);
+      console.log('In send mail, sender object is: ');
       console.log(me);
       // send mail with defined transport object
       recursive(mailOptions, transporter, request_id, auth_token, panic_mode, me);
@@ -200,6 +215,7 @@ var oauth2 = new OAuth2(
 router.get('/estimates/price', function(req, res){
   var source = JSON.parse(req.query.source);
   var destination = JSON.parse(req.query.destination);
+  console.log('server-side-est-price: got estimate request, calling into Uber api');
   // create http request to uber api
   request.get({
     url : uberApiUrl + 'estimates/price',
@@ -213,8 +229,12 @@ router.get('/estimates/price', function(req, res){
     }
   }, function(err, response, body){
     if(err){
+      console.log('server-side-est-price: finished uber api call but got err: ');
+      console.log(err);
       return res.json(err);
     }
+    console.log('server-side-est-price: finished uber api and no error. body is: ');
+    console.log(body);
     res.json(body);
   });
 });
@@ -240,6 +260,7 @@ router.post('/request_info', function(req, res){
     }
   }, function(err, response, body){
     if(err){
+      console.log('in request info, got an error: ');
       console.log(err);
       return res.json(err);
     }
@@ -261,10 +282,15 @@ router.post('/change_request_status', function(req, res){
   var uberRequest = {
     status : req.body.status
   };
+  var method = 'PUT';
+  if (req.body.status === 'rider_canceled') {
+    console.log('change status request for delete');
+    method = 'DELETE';
+  }
 
   // create http request to uber api
   request({
-    method: 'PUT',
+    method: method,
     url: uberApiUrl + 'sandbox/requests/'+req.body.request_id,
     json: uberRequest,
     strictSSL: false,
@@ -273,9 +299,12 @@ router.post('/change_request_status', function(req, res){
     }
   }, function(err, response, body){
     if(err){
+      console.log('got error in change status request');
       console.error(err);
       return res.json(err);
     }
+    console.log('in change status request - no error, body is: ');
+    console.log(body);
     res.json({success: true});
   });
 
@@ -346,14 +375,16 @@ router.get('/oauth/cb', function(req, res){
 });
 
 function closeAndRedirectScript(access_token) {
-  return '<script> \
-          if (window.opener != null && !window.opener.closed){ \
-            window.opener.location = "'+redirectAccessTokenUrl(access_token)+'"; \
-            window.close(); \
-          }else{ \
-            document.write("Pop-up blocker prevented proper authorization process. Please disable and re-authorize."); \
-          } \
-          </script>';
+  return [
+    '<script> ',
+    '  if (window.opener != null && !window.opener.closed){ ',
+    '    window.opener.location = "'+redirectAccessTokenUrl(access_token)+'"; ',
+    '    window.close(); ',
+    '  }else{ ',
+    '    document.write("Pop-up blocker prevented proper authorization process. Please disable and re-authorize."); ',
+    '  } ',
+    '</script>'
+  ].join('');
 }
 
 function redirectAccessTokenUrl(access_token) {

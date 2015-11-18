@@ -7,14 +7,22 @@
 </div>
 <div class="row">
   <div class="col-xs-6">
+    <div ng-if="pricesLoadingText && !prices.data">
+      <span ng-bind="pricesLoadingText"></span>
+    </div>
     <div ng-if="prices.data" id="prices">
-      <span ng-if="!currentProduct">Please choose a service:</span>
-      <div class="list-group">
-        <a ng-repeat="price in prices.data.prices" class="list-group-item"
-                ng-class="{active: (currentProduct && currentProduct.product_id === price.product_id)}"
-                ng-click="setCurrentProduct(price)">
-          <span ng-bind="price.display_name"></span> - <span ng-bind="price.estimate"></span>
-        </a>
+      <div ng-if="prices.data.prices.length">
+        <span ng-if="!currentProduct">Please choose a service:</span>
+        <div class="list-group">
+          <a href ng-repeat="price in prices.data.prices" class="list-group-item"
+                  ng-class="{active: (currentProduct && currentProduct.product_id === price.product_id)}"
+                  ng-click="setCurrentProduct(price)">
+            <span ng-bind="price.display_name"></span> - <span ng-bind="price.estimate"></span>
+          </a>
+        </div>
+      </div>
+      <div ng-if="!prices.data.prices.length">
+        <span>No Uber products currently available in your area, please try again later.</span>
       </div>
     </div>
   </div>
