@@ -20,9 +20,12 @@ angular.module('rideguardians').controller("SimpleMapController", [ '$scope', 'R
     var newLat = parseFloat(RideGuardiansUberService.requestedProduct.data.location.latitude);
     var newLng = parseFloat(RideGuardiansUberService.requestedProduct.data.location.longitude);
     if ($scope.markers.car) {
+      // This is for demo purposes since the sandbox API doesn't automatically move the location value to the destination when it is marked complete
       if (RideGuardiansUberService.requestedProduct.data.status === 'completed') {
         newLat = $scope.markers.destination.lat;
+        RideGuardiansUberService.requestedProduct.data.location.latitude = '' + newLat;
         newLng = $scope.markers.destination.lng;
+        RideGuardiansUberService.requestedProduct.data.location.longitude = '' + newLng;
       }
       console.log('car marker already exists, new location is: '+newLat+'/'+newLng);
       $scope.markers.car.lat = newLat;
